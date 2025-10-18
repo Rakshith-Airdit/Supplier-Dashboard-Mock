@@ -1,0 +1,74 @@
+{
+  "purchaseOrders": {
+    "title": "Open Purchase Orders",
+    "chartTitle": "Purchase Order Values by Status",
+    "orders": [
+      {
+        "id": "PO-2025-10001",
+        "description": "Hydraulic Pump Assembly HPK-S00",
+        "value": 130000,
+        "quantity": 1200,
+        "deliveryDate": "2025-10-25",
+        "status": "In Progress",
+        "statusProgress": 18,
+        "statusCategory": "In Progress"
+      },
+      {
+        "id": "PO-2025-10015",
+        "description": "Industrial Ball Bearings BRG-2500",
+        "value": 85000,
+        "quantity": 4500,
+        "deliveryDate": "2025-11-15",
+        "status": "Ready to Ship",
+        "statusProgress": 100,
+        "statusCategory": "Ready to Ship"
+      },
+      {
+        "id": "PO-2025-10023",
+        "description": "Stainless Steel Valves V-300",
+        "value": 67000,
+        "quantity": 890,
+        "deliveryDate": "2025-09-30",
+        "status": "Delayed",
+        "statusProgress": 45,
+        "statusCategory": "Delayed"
+      },
+      {
+        "id": "PO-2025-10034",
+        "description": "Electrical Control Panels ECP-500",
+        "value": 210000,
+        "quantity": 50,
+        "deliveryDate": "2025-12-10",
+        "status": "Not Started",
+        "statusProgress": 0,
+        "statusCategory": "Not Started"
+      },
+      {
+        "id": "PO-2025-10042",
+        "description": "Pneumatic Cylinders PC-800",
+        "value": 95000,
+        "quantity": 1200,
+        "deliveryDate": "2025-11-05",
+        "status": "In Progress",
+        "statusProgress": 65,
+        "statusCategory": "In Progress"
+      },
+      {
+        "id": "PO-2025-10056",
+        "description": "Conveyor Belt Systems CBS-1000",
+        "value": 180000,
+        "quantity": 8,
+        "deliveryDate": "2025-12-20",
+        "status": "Ready to Ship",
+        "statusProgress": 100,
+        "statusCategory": "Ready to Ship"
+      }
+    ],
+    "statusCategories": [
+      { "name": "Ready to Ship", "value": 275000, "color": "Good" },
+      { "name": "In Progress", "value": 345000, "color": "Critical" },
+      { "name": "Delayed", "value": 67000, "color": "Error" },
+      { "name": "Not Started", "value": 210000, "color": "Neutral" }
+    ]
+  }
+}

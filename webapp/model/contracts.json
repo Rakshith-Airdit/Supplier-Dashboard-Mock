@@ -1,0 +1,37 @@
+{
+  "contracts": {
+    "title": "My Commitments - Active Contracts & Scheduling Agreements",
+    "items": [
+      {
+        "contractNo": "4500000123",
+        "productName": "Hydraulic Pump Assembly",
+        "status": "Existing Score",
+        "statusState": "Warning",
+        "validityPeriod": "01.01.2025 - 01.09.2025",
+        "totalOrderedQty": "20,000 units",
+        "daysToExpiry": "10 days",
+        "expiryState": "Error"
+      },
+      {
+        "contractNo": "4500000156",
+        "productName": "Industrial Ball Bearings",
+        "status": "Active",
+        "statusState": "Success",
+        "validityPeriod": "15.03.2025 - 15.12.2025",
+        "totalOrderedQty": "45,000 units",
+        "daysToExpiry": "60 days",
+        "expiryState": "Warning"
+      },
+      {
+        "contractNo": "4500000178",
+        "productName": "Stainless Steel Valves",
+        "status": "Active",
+        "statusState": "Success",
+        "validityPeriod": "01.02.2025 - 01.02.2026",
+        "totalOrderedQty": "15,500 units",
+        "daysToExpiry": "108 days",
+        "expiryState": "Success"
+      }
+    ]
+  }
+}

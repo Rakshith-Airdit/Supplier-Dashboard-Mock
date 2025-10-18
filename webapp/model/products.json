@@ -1,0 +1,31 @@
+{
+  "topProducts": {
+    "title": "Top 3 Products",
+    "items": [
+      {
+        "rank": 1,
+        "name": "Hydraulic Pump Assembly HPX-500",
+        "quantity": 12450,
+        "totalSpend": 1245000,
+        "trend": 12,
+        "currency": "USD"
+      },
+      {
+        "rank": 2,
+        "name": "Industrial Ball Bearing BRG-2500",
+        "quantity": 45200,
+        "totalSpend": 892500,
+        "trend": 8,
+        "currency": "USD"
+      },
+      {
+        "rank": 3,
+        "name": "Stainless Steel Valve V-300",
+        "quantity": 8900,
+        "totalSpend": 678300,
+        "trend": 15,
+        "currency": "USD"
+      }
+    ]
+  }
+}

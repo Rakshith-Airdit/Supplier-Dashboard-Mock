@@ -1,0 +1,30 @@
+{
+  "businessData": {
+    "title": "My Business",
+    "financialOverview": {
+      "totalPOValue": 3661000,
+      "monthlyGrowth": 8.2,
+      "currentMonth": 412000,
+      "currency": "USD"
+    },
+    "monthlySpendTrend": {
+      "title": "Monthly Spend Trend",
+      "data": [
+        { "month": "Jan", "spend": 50 },
+        { "month": "Feb", "spend": 1500 },
+        { "month": "Mar", "spend": 3000 },
+        { "month": "Apr", "spend": 4500 },
+        { "month": "May", "spend": 8000 },
+        { "month": "Jun", "spend": 4500 },
+        { "month": "Jul", "spend": 3000 },
+        { "month": "Aug", "spend": 1500 },
+        { "month": "Sep", "spend": 4500 },
+        { "month": "Oct", "spend": 3000 }
+      ],
+      "currentMonthSpend": {
+        "month": "Mar",
+        "spend": 289000
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "demandForecast": {
+    "title": "Demand Forecast (Planned Independent Requirements)",
+    "description": "Week-wise demand forecast from SAP Production Planning (PIR)",
+    "chartData": [
+      {
+        "Week": "W42",
+        "Bearings": 1000,
+        "HydraulicPumps": 1200,
+        "Valves": 900
+      },
+      {
+        "Week": "W43",
+        "Bearings": 800,
+        "HydraulicPumps": 1100,
+        "Valves": 700
+      },
+      {
+        "Week": "W44",
+        "Bearings": 950,
+        "HydraulicPumps": 1050,
+        "Valves": 600
+      },
+      {
+        "Week": "W45",
+        "Bearings": 1200,
+        "HydraulicPumps": 1300,
+        "Valves": 800
+      },
+      {
+        "Week": "W46",
+        "Bearings": 1500,
+        "HydraulicPumps": 1400,
+        "Valves": 900
+      },
+      {
+        "Week": "W47",
+        "Bearings": 4300,
+        "HydraulicPumps": 1500,
+        "Valves": 1100
+      },
+      {
+        "Week": "W48",
+        "Bearings": 3200,
+        "HydraulicPumps": 1700,
+        "Valves": 1200
+      },
+      {
+        "Week": "W49",
+        "Bearings": 2800,
+        "HydraulicPumps": 1600,
+        "Valves": 950
+      }
+    ],
+    "settings": {
+      "dataset": {
+        "name": "Product Display",
+        "values": [
+          { "name": "All Products", "key": "all" },
+          { "name": "Bearings Only", "key": "bearings" },
+          { "name": "Hydraulic Pumps Only", "key": "pumps" },
+          { "name": "Valves Only", "key": "valves" }
+        ]
+      },
+      "series": {
+        "name": "Chart Type",
+        "values": [
+          { "name": "Line Chart", "key": "line" },
+          { "name": "Column Chart", "key": "column" },
+          { "name": "Stacked Column", "key": "stacked" }
+        ]
+      },
+      "dataLabel": {
+        "name": "Data Labels",
+        "defaultState": true
+      },
+      "axisTitle": {
+        "name": "Axis Titles",
+        "defaultState": true
+      }
+    }
+  }
+}

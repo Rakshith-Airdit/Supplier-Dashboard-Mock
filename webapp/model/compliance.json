@@ -1,0 +1,48 @@
+{
+  "complianceData": {
+    "title": "My Compliance",
+    "expiringScore": "30 days left",
+    "items": [
+      {
+        "id": 1,
+        "name": "GST Registration Certificate",
+        "submitted": "15 Jan 2024",
+        "expires": "15 Jan 2026",
+        "status": "Active",
+        "statusState": "Success"
+      },
+      {
+        "id": 2,
+        "name": "PAN Card",
+        "submitted": "15 Jan 2024",
+        "expires": "No Expiry",
+        "status": "Active",
+        "statusState": "Success"
+      },
+      {
+        "id": 3,
+        "name": "ISO 9001:2015 Certification",
+        "submitted": "10 Feb 2024",
+        "expires": "15 Nov 2025",
+        "status": "Active",
+        "statusState": "Success"
+      },
+      {
+        "id": 4,
+        "name": "Environmental Compliance Certificate",
+        "submitted": "20 Mar 2024",
+        "expires": "20 Mar 2026",
+        "status": "Active",
+        "statusState": "Success"
+      },
+      {
+        "id": 5,
+        "name": "Bank Account Details",
+        "submitted": "15 Jan 2024",
+        "expires": "No Expiry",
+        "status": "Active",
+        "statusState": "Success"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ppmData": {
+    "title": "Parts Per Million (PPM) Quality KPI",
+    "description": "Defective units per one million parts received (based on return deliveries and quality notifications)",
+    "currentPPM": 180,
+    "monthlyData": [
+      { "month": "Jan 2025", "actualPPM": 520, "targetPPM": 500 },
+      { "month": "Feb 2025", "actualPPM": 480, "targetPPM": 500 },
+      { "month": "Mar 2025", "actualPPM": 420, "targetPPM": 500 },
+      { "month": "Apr 2025", "actualPPM": 380, "targetPPM": 500 },
+      { "month": "May 2025", "actualPPM": 420, "targetPPM": 500 },
+      { "month": "Jun 2025", "actualPPM": 350, "targetPPM": 500 },
+      { "month": "Jul 2025", "actualPPM": 320, "targetPPM": 500 },
+      { "month": "Aug 2025", "actualPPM": 280, "targetPPM": 500 },
+      { "month": "Sep 2025", "actualPPM": 240, "targetPPM": 500 },
+      { "month": "Oct 2025", "actualPPM": 180, "targetPPM": 500 }
+    ]
+  }
+}

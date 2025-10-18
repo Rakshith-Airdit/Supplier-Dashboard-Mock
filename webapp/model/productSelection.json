@@ -1,0 +1,13 @@
+{
+  "productSelection": {
+    "title": "Product Selection",
+    "selectedCount": "3 Product Selected",
+    "label": "Select Products:",
+    "products": [
+      "Hydraulic Pumps",
+      "Bearings", 
+      "Valves"
+    ],
+    "selectedProducts": "Hydraulic Pumps, Bearings, Valves"
+  }
+}
