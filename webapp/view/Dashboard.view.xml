@@ -8,88 +8,99 @@
     xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
     xmlns:chart="sap.suite.ui.commons"
     xmlns:f="sap.f"
-    xmlns:grid="sap.ui.layout.cssgrid" displayBlock="true">
-
-    <Page id="page" title="{i18n>title}" titleAlignment="Center">
+    xmlns:grid="sap.ui.layout.cssgrid" displayBlock="true" class="supplier-dashboard">
+    <Page id="page" title="{i18n>title}" titleAlignment="Center" showHeader="true">
         <content>
             <layout:BlockLayout id="dashboardBlockLayout" background="Dashboard">
-                <layout:BlockLayoutRow scrollable="false">
-                    <!-- Business Announcements & News Section - Left Block -->
+                <!-- Row 1: Announcements & Top Products -->
+                <layout:BlockLayoutRow>
+                    <!-- Business Announcements & News Section -->
                     <layout:BlockLayoutCell>
-                        <VBox fitContainer="true">
-                            <HBox justifyContent="SpaceBetween" alignItems="Center">
-                                <Title text="{announcements>/announcements/title}" level="H2" class="sapUiSmallMargin"/>
-                                <MultiComboBox selectionChange="onProductSelectionChanged" items="{path: 'productSelection>/products'}">
-                                    <core:Item key="{productSelection>key}" text="{productSelection>name}"/>
-                                </MultiComboBox>
-                            </HBox>
+                        <VBox>
+                            <OverflowToolbar class="sapUiTinyMarginTopBottom">
+                                <Title text="{announcements>/announcements/title}" level="H2" class="sapUiSmallMarginBottom"/>
+                                <ToolbarSpacer />
+                                <ComboBox id="categoryFilter" width="280px" selectionChange="onCategoryFilterChanged" placeholder="Filter by category" items="{path: 'categories>/categories'}" selectedKey="{filter>/selectedCategory}" showSecondaryValues="true" class="sapUiSmallMarginTopBottom">
+                                    <core:ListItem key="{categories>key}" text="{categories>text}" additionalText="{categories>count}"/>
+                                </ComboBox>
+                            </OverflowToolbar>
 
-                            <f:GridList id="responsiveAnnouncementsGrid" items="{announcements>/announcements/items}" width="100%" growing="true" growingThreshold="3" class="fioriGrid">
-                                <f:customLayout>
-                                    <grid:GridBoxLayout boxWidth="100%"/>
-                                </f:customLayout>
-                                <f:GridListItem>
-                                    <VBox class="fioriAnnouncementItem">
-                                        <FlexBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMargin">
-                                            <HBox alignItems="Center">
-                                                <Avatar displaySize="S" displayShape="Square" src="{= ${announcements>type} === 'RFC' ? 'sap-icon://message-information' : ${announcements>type} === 'Business Announcement' ? 'sap-icon://bell' : ${announcements>type} === 'Compliance Notification' ? 'sap-icon://alert' : 'sap-icon://warning' }" class="sapUiTinyMarginEnd"/>
-                                                <VBox>
-                                                    <Text text="{announcements>title}" class="fioriAnnouncementTitle"/>
-                                                    <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
-                                                        <Text text="{announcements>timeAgo}" class="fioriTimestampText"/>
-                                                        <Text text="{announcements>category}" class="fioriTypeText"/>
-                                                    </HBox>
-                                                </VBox>
+                            <ScrollContainer height="400px" vertical="true" horizontal="false" class="scroll-container-hidden sapUiTinyMarginTopBottom">
+                                <f:GridList id="responsiveAnnouncementsGrid" items="{announcements>/announcements/items}" width="100%" growing="true" growingThreshold="4" growingScrollToLoad="true">
+                                    <f:customLayout>
+                                        <grid:GridBoxLayout boxWidth="100%" />
+                                    </f:customLayout>
+                                    <f:GridListItem>
+                                        <VBox class="sapUiSmallMargin">
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween" width="100%">
+                                                <!-- Left: Icon + Content -->
+                                                <HBox alignItems="Start" width="90%">
+                                                    <Avatar displaySize="S" displayShape="Square" src="{path: 'announcements>category', formatter: '.getAnnouncementIcon'}" backgroundColor="{path: 'announcements>category', formatter: '.getAnnouncementColor'}" class="sapUiTinyMarginEnd" />
+
+                                                    <VBox width="100%">
+                                                        <Link text="{announcements>title}" target="_blank" href="javascript:void(0)" class="sapUiTinyMarginBottom" width="100%" />
+
+                                                        <HBox justifyContent="Start" alignItems="Center" width="100%">
+                                                            <ObjectStatus inverted="true" state="{= ${announcements>category} === 'Urgent' ? 'Error' : 
+                                                        ${announcements>category} === 'Information' ? 'Success' : 'Warning'}" text="{announcements>category}" />
+                                                            <Text text="{announcements>timeAgo}" class="sapUiTinyMarginBegin" />
+                                                        </HBox>
+                                                    </VBox>
+                                                </HBox>
+
+                                                <!-- Right: New Badge -->
+                                                <ObjectStatus text="New" inverted="true" state="Error" visible="{announcements>isNew}" class="sapUiTinyMarginBegin" />
                                             </HBox>
-                                            <ObjectStatus text="New" state="Error" class="sapUiTinyMarginBegin"/>
-                                        </FlexBox>
-                                    </VBox>
-                                </f:GridListItem>
-                            </f:GridList>
+                                        </VBox>
+                                    </f:GridListItem>
+                                </f:GridList>
+                            </ScrollContainer>
                         </VBox>
                     </layout:BlockLayoutCell>
 
-                    <!-- Top Products Section - Right Block -->
+                    <!-- Top Products Section -->
                     <layout:BlockLayoutCell>
-                        <VBox fitContainer="true">
-                            <Title text="{products>/topProducts/title}" level="H2" class="sapUiSmallMargin"/>
-
-                            <!-- <f:GridList >
-                                <f:customLayout>
-                                    <grid:GridBoxLayout boxWidth="100%"/>
-                                </f:customLayout>
-                                <f:GridListItem>
-                                  
-                                </f:GridListItem>
-                            </f:GridList> -->
-
-                            <VBox items="{path: 'products>/topProducts/items'}" width="100%">
-                                <f:Card class="sapUiTinyMargin productCard">
+                        <VBox>
+                            <OverflowToolbar class="sapUiTinyMarginTopBottom">
+                                <Title text="{products>/topProducts/title}" level="H2" class="sapUiSmallMarginBottom" />
+                                <ToolbarSpacer />
+                            </OverflowToolbar>
+                            <VBox items="{path: 'products>/topProducts/items'}">
+                                <f:Card class="sapUiTinyMarginTopBottom">
                                     <f:customData>
-                                        <cards:CardBadgeCustomData value="#1" state="Indication17" announcementText="The card is recently updated." visibilityMode="Persist"/>
+                                        <cards:CardBadgeCustomData value="#{products>rank}" state="{= ${products>rank} === 1 ? 'Success' : ${products>rank} === 2 ? 'Warning' : 'Indication06'}" visibilityMode="Persist" />
                                     </f:customData>
                                     <f:content>
-                                        <FlexBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
-                                            <HBox alignItems="Center">
-                                                <Avatar displaySize="M" backgroundColor="Accent6" displayShape="Square" src="sap-icon://documents" class="sapUiSmallMarginEnd" />
-                                                <VBox>
-                                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
-                                                        <VBox>
-                                                            <Label text="Quantity Delivered" design="Bold"/>
-                                                            <Text text="{parts: [{path: 'products>quantity'}, {path: 'products>quantity', formatter: '.formatNumber'}], formatter: '.formatQuantity'}" class="sapUiTinyMarginTop"/>
-                                                        </VBox>
-                                                        <VBox>
-                                                            <Label text="Total Spend" design="Bold"/>
-                                                            <ObjectNumber number="{parts: [{path: 'products>totalSpend'}, {path: 'products>currency'}], formatter: '.formatCurrency'}" state="Success" class="sapUiTinyMarginTop"/>
-                                                        </VBox>
-                                                        <VBox>
-                                                            <Label text="Trend" design="Bold"/>
-                                                            <ObjectStatus text="{parts: [{path: 'products>trend'}], formatter: '.formatTrend'}" state="{path: 'products>trend', formatter: '.getTrendState'}" class="sapUiTinyMarginTop"/>
-                                                        </VBox>
-                                                    </HBox>
+                                        <HBox alignItems="Center" class="sapUiSmallMargin" width="100%">
+                                            <!-- Rank & Avatar -->
+                                            <VBox alignItems="Center" class="sapUiSmallMarginEnd" width="60px">
+                                                <Avatar displaySize="M" backgroundColor="{= ${products>rank} === 1 ? 'Accent1' : ${products>rank} === 2 ? 'Accent2' : 'Accent6'}" displayShape="Square" src="sap-icon://documents" />
+                                            </VBox>
+
+                                            <!-- Product Name -->
+                                            <VBox class="sapUiSmallMarginEnd" width="30%">
+                                                <Label text="Product" design="Bold" class="sapUiTinyMarginBottom" />
+                                                <Text text="{products>name}" wrapping="true" />
+                                            </VBox>
+
+                                            <!-- Metrics -->
+                                            <HBox justifyContent="SpaceBetween" width="60%" alignItems="Stretch">
+                                                <VBox alignItems="Center" width="33%">
+                                                    <Label text="Quantity" design="Bold" class="sapUiTinyMarginBottom" />
+                                                    <Text text="{parts: [{path: 'products>quantity'}, {path: 'products>quantity', formatter: '.formatNumber'}], formatter: '.formatQuantity'}" class="sapMTextBold" />
+                                                </VBox>
+
+                                                <VBox alignItems="Center" width="33%">
+                                                    <Label text="Total Spend" design="Bold" class="sapUiTinyMarginBottom" />
+                                                    <ObjectNumber number="{parts: [{path: 'products>totalSpend'}, {path: 'products>currency'}], formatter: '.formatCurrency'}" state="Success" />
+                                                </VBox>
+
+                                                <VBox alignItems="Center" width="33%">
+                                                    <Label text="Trend" design="Bold" class="sapUiTinyMarginBottom" />
+                                                    <ObjectStatus text="{parts: [{path: 'products>trend'}], formatter: '.formatTrend'}" state="{path: 'products>trend', formatter: '.getTrendState'}" class="sapMTextBold" />
                                                 </VBox>
                                             </HBox>
-                                        </FlexBox>
+                                        </HBox>
                                     </f:content>
                                 </f:Card>
                             </VBox>
@@ -97,73 +108,82 @@
                     </layout:BlockLayoutCell>
                 </layout:BlockLayoutRow>
 
-                <layout:BlockLayoutRow scrollable="false">
-                    <!-- My Business Section -->
-                    <layout:BlockLayoutCell>
-                        <VBox class="sapUiSmallMargin" height="100%">
-                            <Title text="Monthly Spend Trend" level="H2" class="sapUiSmallMarginBottom"/>
+                <!-- Row 2: Business Data & Compliance -->
+                <layout:BlockLayoutRow>
+                    <!-- Monthly Spend Trend Section -->
+                    <layout:BlockLayoutCell class="dashboard-cell">
+                        <VBox class="dashboard-card" height="100%">
 
-                            <!-- Financial Cards in Panel -->
-                            <Panel headerText="Financial Overview" expandable="true" expanded="false" width="100%">
-                                <content>
-                                    <HBox justifyContent="SpaceBetween" class="sapUiSmallMargin">
-                                        <!-- Total PO Value -->
-                                        <f:Card class="financialCard financialCard1 sapUiTinyMargin">
-                                            <f:header>
-                                                <cards:Header title="$ Total PO Value"/>
-                                            </f:header>
-                                            <f:content>
-                                                <VBox alignItems="Center" class="sapUiSmallMargin">
-                                                    <ObjectStatus text="$3,661,000" state="Success" class="sapMObjectNumberLarge"/>
-                                                </VBox>
-                                            </f:content>
-                                        </f:Card>
+                            <OverflowToolbar class="sapUiTinyMarginTopBottom">
+                                <Title text="Monthly Spend Trend" level="H2" class="card-header sapUiSmallMarginBottom" />
+                                <ToolbarSpacer />
+                            </OverflowToolbar>
 
-                                        <!-- Monthly Growth -->
-                                        <f:Card class="financialCard financialCard2 sapUiTinyMargin">
-                                            <f:header>
-                                                <cards:Header title="Monthly Growth"/>
-                                            </f:header>
-                                            <f:content>
-                                                <VBox alignItems="Center" class="sapUiSmallMargin">
-                                                    <ObjectStatus text="+8.2%" state="Success" class="sapMObjectNumberLarge"/>
-                                                </VBox>
-                                            </f:content>
-                                        </f:Card>
+                            <!-- Financial Overview Cards -->
+                            <FlexBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginTopBottom" width="100%">
+                                <GenericTile class="sapUiTinyMarginTopBottom sapUiTinyMarginEnd tileLayout financial-card financial-card-total" header="Total PO Value" frameType="OneByHalf">
+                                    <TileContent unit="$">
+                                        <NumericContent value="3661000" valueColor="Good" scale="M" withMargin="false" icon="sap-icon://lead"/>
+                                    </TileContent>
+                                </GenericTile>
 
-                                        <!-- Current Month -->
-                                        <f:Card class="financialCard financialCard3 sapUiTinyMargin">
-                                            <f:header>
-                                                <cards:Header title="Current Month"/>
-                                            </f:header>
-                                            <f:content>
-                                                <VBox alignItems="Center" class="sapUiSmallMargin">
-                                                    <ObjectStatus text="$412,000" state="Success" class="sapMObjectNumberLarge"/>
-                                                </VBox>
-                                            </f:content>
-                                        </f:Card>
-                                    </HBox>
-                                </content>
-                            </Panel>
+                                <GenericTile class="sapUiTinyMarginTopBottom sapUiTinyMarginEnd tileLayout financial-card financial-card-growth" header="Monthly Growth" frameType="OneByHalf">
+                                    <TileContent unit="%">
+                                        <NumericContent value="8.2" valueColor="Good" indicator="Up" scale="M" withMargin="false" icon="sap-icon://trend-up"/>
+                                    </TileContent>
+                                </GenericTile>
 
-                            <chart:ChartContainer id="businessDataChartContainer" showFullScreen="true" showZoom="true" showLegend="true" width="100%">
+                                <GenericTile class="sapUiTinyMarginTopBottom sapUiTinyMarginEnd tileLayout financial-card financial-card-current" header="Current Month" frameType="OneByHalf">
+                                    <TileContent unit="$">
+                                        <NumericContent value="412000" valueColor="Good" scale="M" withMargin="false" icon="sap-icon://calendar"/>
+                                    </TileContent>
+                                </GenericTile>
+                            </FlexBox>
+
+                            <!-- Spend Chart -->
+                            <chart:ChartContainer id="businessDataChartContainer" showFullScreen="true" showZoom="true" showLegend="true" width="100%" class="spend-chart-container sapUiTinyMarginTopBottom">
                                 <chart:content>
                                     <chart:ChartContainerContent icon="sap-icon://bar-chart" title="Monthly Spend">
                                         <chart:content>
-                                            <viz:VizFrame id="spendChart" vizType="column" width="100%">
+                                            <viz:VizFrame id="spendChart" vizType="column" width="100%" height="300px" vizProperties="{
+                                                    plotArea: {
+                                                        dataLabel: {
+                                                            visible: false
+                                                        }
+                                                    },
+                                                    title: {
+                                                        visible: false
+                                                    },
+                                                    legend: {
+                                                        visible: true,
+                                                        position: 'bottom'
+                                                    },
+                                                    valueAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'Spend ($)'
+                                                        }
+                                                    },
+                                                    categoryAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'Month'
+                                                        }
+                                                    }
+                                                }">
                                                 <viz:dataset>
                                                     <viz.data:FlattenedDataset data="{businessData>/businessData/monthlySpendTrend/data}">
                                                         <viz.data:dimensions>
-                                                            <viz.data:DimensionDefinition name="Month" value="{businessData>month}"/>
+                                                            <viz.data:DimensionDefinition name="Month" value="{businessData>month}" />
                                                         </viz.data:dimensions>
                                                         <viz.data:measures>
-                                                            <viz.data:MeasureDefinition name="Spend" value="{businessData>spend}"/>
+                                                            <viz.data:MeasureDefinition name="Spend" value="{businessData>spend}" />
                                                         </viz.data:measures>
                                                     </viz.data:FlattenedDataset>
                                                 </viz:dataset>
                                                 <viz:feeds>
-                                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Spend"/>
-                                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+                                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Spend" />
+                                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month" />
                                                 </viz:feeds>
                                             </viz:VizFrame>
                                         </chart:content>
@@ -173,235 +193,302 @@
                         </VBox>
                     </layout:BlockLayoutCell>
 
-                    <!-- My Compliance Section -->
-                    <layout:BlockLayoutCell class="equalHeightCell">
+                    <!-- Compliance Section -->
+                    <layout:BlockLayoutCell>
                         <VBox height="100%">
-                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiMediumMargin">
-                                <Title text="My Compliance" level="H2"/>
-                                <ObjectStatus text="{compliance>/complianceData/expiringScore}" state="Error" class="sapUiSmallMarginBegin"/>
-                            </HBox>
+                            <OverflowToolbar class="sapUiTinyMarginTopBottom">
+                                <Title text="My Compliance" level="H2" class="sapUiSmallMarginBottom"/>
+                                <ToolbarSpacer/>
+                                <!-- <ObjectStatus text="{compliance>/complianceData/expiringScore}" state="{= ${compliance>/complianceData/expiringScore} > 50 ? 'Error' : 
+                        ${compliance>/complianceData/expiringScore} > 25 ? 'Warning' : 'Success'}" class="sapUiSmallMarginBottom"/> -->
+                            </OverflowToolbar>
 
-                            <!-- Compliance Items with GridList and More button -->
-                            <f:GridList id="complianceGridList" items="{path: 'compliance>/complianceData/items'}" growing="true" growingThreshold="5" growingScrollToLoad="false" class="sapUiSmallMargin">
+                            <ScrollContainer height="500px" vertical="true" horizontal="false" class="scroll-container-hidden sapUiTinyMarginTopBottom">
+                                <f:GridList id="complianceGridList" items="{path: 'compliance>/complianceData/items'}" width="100%" growing="true" growingThreshold="5" growingScrollToLoad="true">
 
-                                <f:customLayout>
-                                    <grid:GridBoxLayout boxWidth="100%"/>
-                                </f:customLayout>
+                                    <f:customLayout>
+                                        <grid:GridBoxLayout boxWidth="100%"/>
+                                    </f:customLayout>
 
-                                <f:GridListItem>
-                                    <f:Card class="sapUiTinyMarginBottom" height="100%">
-                                        <f:content>
-                                            <FlexBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin" width="100%">
-                                                <HBox alignItems="Center">
-                                                    <!-- Avatar on left -->
-                                                    <Avatar displaySize="S" displayShape="Square" src="sap-icon://document" backgroundColor="Accent6" class="sapUiSmallMarginEnd"/>
+                                    <f:GridListItem>
+                                        <VBox class="sapUiSmallMargin">
+                                            <HBox alignItems="Center" justifyContent="SpaceBetween" width="100%">
+                                                <!-- Left: Icon + Content -->
+                                                <HBox alignItems="Start" width="90%">
+                                                    <Avatar displaySize="S" displayShape="Square" src="sap-icon://document" backgroundColor="Accent6" class="sapUiTinyMarginEnd"/>
 
-                                                    <!-- Content in middle -->
-                                                    <VBox class="sapUiSmallMarginBegin" width="100%">
-                                                        <Title text="{compliance>name}" level="H3" class="sapUiTinyMarginBottom"/>
-                                                        <HBox class="sapUiTinyMarginTop">
+                                                    <VBox width="100%">
+                                                        <Text text="{compliance>name}" class="sapUiTinyMarginBottom" width="100%"/>
+
+                                                        <HBox justifyContent="Start" alignItems="Center" width="100%">
                                                             <Text text="Submitted: {compliance>submitted}" class="sapUiTinyMarginEnd"/>
                                                             <Text text="Expires: {compliance>expires}"/>
                                                         </HBox>
                                                     </VBox>
                                                 </HBox>
-                                                <!-- Status at the end -->
-                                                <ObjectStatus text="{compliance>status}" state="{compliance>statusState}" class="sapUiSmallMarginBegin"/>
-                                            </FlexBox>
-                                        </f:content>
-                                    </f:Card>
-                                </f:GridListItem>
-                            </f:GridList>
-                        </VBox>
-                    </layout:BlockLayoutCell>
-                </layout:BlockLayoutRow>
 
-                <layout:BlockLayoutRow scrollable="false">
-                    <!-- Chart Section - Left Block -->
-                    <layout:BlockLayoutCell>
-                        <f:Card>
-                            <f:header>
-                                <cards:Header title="{demandForecast>/demandForecast/title}" subtitle="{demandForecast>/demandForecast/description}"></cards:Header>
-                            </f:header>
-                            <f:content>
-                                <chart:ChartContainer id="demandChartContainer" showFullScreen="true" width="100%" autoAdjustHeight="false">
-                                    <chart:content>
-                                        <chart:ChartContainerContent icon="sap-icon://line-chart" title="Demand Forecast Trend">
-                                            <chart:content>
-                                                <viz:VizFrame id="demandVizFrame" uiConfig="{applicationSet:'fiori'}" width="100%" height="480px" vizType="line">
-                                                    <viz:dataset>
-                                                        <viz.data:FlattenedDataset data="{demandForecast>/demandForecast/chartData}">
-                                                            <viz.data:dimensions>
-                                                                <viz.data:DimensionDefinition name="Week" value="{Week}" />
-                                                            </viz.data:dimensions>
-                                                            <viz.data:measures>
-                                                                <viz.data:MeasureDefinition name="Bearings" value="{Bearings}" />
-                                                                <viz.data:MeasureDefinition name="Hydraulic Pumps" value="{HydraulicPumps}" />
-                                                                <viz.data:MeasureDefinition name="Valves" value="{Valves}" />
-                                                            </viz.data:measures>
-                                                        </viz.data:FlattenedDataset>
-                                                    </viz:dataset>
-                                                    <viz:feeds>
-                                                        <viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure" values="Bearings,Hydraulic Pumps,Valves" />
-                                                        <viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension" values="Week" />
-                                                    </viz:feeds>
-                                                    <viz:dependents>
-                                                        <viz:Popover id="demandPopOver" />
-                                                        <viz:VizTooltip id="demandToolTip"></viz:VizTooltip>
-                                                    </viz:dependents>
-                                                </viz:VizFrame>
-                                            </chart:content>
-                                        </chart:ChartContainerContent>
-                                    </chart:content>
-                                    <chart:toolbar>
-                                        <OverflowToolbar>
-                                            <ToolbarSpacer/>
-                                            <Label text="Product Display:" class="sapUiSmallMarginEnd"/>
-                                            <MultiComboBox id="productMultiComboBox" width="300px" selectionChange="onProductSelectionChanged" items="{path: 'productSelection>/products'}">
-                                                <core:Item key="{productSelection>key}" text="{productSelection>name}"/>
-                                            </MultiComboBox>
-                                            <chart:ChartContainerToolbarPlaceholder/>
-                                        </OverflowToolbar>
-                                    </chart:toolbar>
-                                </chart:ChartContainer>
-                            </f:content>
-                        </f:Card>
-                    </layout:BlockLayoutCell>
-
-                    <!-- Contracts Section - Right Block -->
-                    <layout:BlockLayoutCell>
-                        <VBox fitContainer="true">
-                            <Title text="{contracts>/contracts/title}" level="H2" class="sapUiSmallMargin"/>
-
-                            <f:GridList id="responsiveContractsGrid" items="{contracts>/contracts/items}" width="100%" growing="true" growingThreshold="3">
-                                <f:customLayout>
-                                    <grid:GridBoxLayout boxWidth="100%"/>
-                                </f:customLayout>
-                                <f:GridListItem>
-                                    <VBox class="sapUiSmallMargin" backgroundDesign="Solid">
-                                        <!-- Contract Header -->
-                                        <FlexBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
-                                            <HBox alignItems="Center">
-                                                <Avatar displaySize="M" backgroundColor="Accent6" displayShape="Square" src="sap-icon://documents" class="sapUiSmallMarginEnd" />
-                                                <VBox>
-                                                    <Text text="{contracts>contractNo}" class="sapThemeHighlight-asColor sapMTextBold"/>
-                                                    <Text text="{contracts>productName}" class="sapUiTinyMarginTop sapMText"/>
-                                                </VBox>
+                                                <!-- Right: Status Badge -->
+                                                <ObjectStatus text="{compliance>status}" state="{compliance>statusState}" class="sapUiTinyMarginBegin"/>
                                             </HBox>
-                                            <ObjectStatus text="{contracts>status}" state="{contracts>statusState}"/>
-                                        </FlexBox>
-
-                                        <!-- Contract Content -->
-                                        <FlexBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
-                                            <VBox class="sapUiSmallPaddingEnd" width="33%">
-                                                <Label text="Validity Period" class="sapUiTinyMarginBottom"/>
-                                                <Text text="{contracts>validityPeriod}" class="sapMText"/>
-                                            </VBox>
-                                            <VBox class="sapUiSmallPaddingEnd" width="33%">
-                                                <Label text="Total Ordered Qty" class="sapUiTinyMarginBottom"/>
-                                                <Text text="{contracts>totalOrderedQty}" class="sapMText"/>
-                                            </VBox>
-                                            <VBox class="sapUiSmallPaddingEnd" width="33%">
-                                                <Label text="Expiry Date" class="sapUiTinyMarginBottom"/>
-                                                <ObjectStatus text="{contracts>daysToExpiry}" state="{contracts>expiryState}"/>
-                                            </VBox>
-                                        </FlexBox>
-                                    </VBox>
-                                </f:GridListItem>
-                            </f:GridList>
+                                        </VBox>
+                                    </f:GridListItem>
+                                </f:GridList>
+                            </ScrollContainer>
                         </VBox>
                     </layout:BlockLayoutCell>
                 </layout:BlockLayoutRow>
 
-                <layout:BlockLayoutRow scrollable="false">
-                    <layout:BlockLayoutCell>
-                        <chart:ChartContainer id="purchaseOrdersChartContainer" showFullScreen="true" showPersonalization="true" autoAdjustHeight="true" title="Purchase Order Analytics">
-                            <chart:content>
-                                <!-- Column Chart View -->
-                                <chart:ChartContainerContent icon="sap-icon://horizontal-bar-chart" title="Order Values">
-                                    <chart:content>
-                                        <viz:VizFrame id="columnChart" height="400px" width="100%" vizType="bullet">
-                                            <viz:dataset>
-                                                <viz.data:FlattenedDataset data="{purchaseOrders>/purchaseOrders/orders}">
-                                                    <viz.data:dimensions>
-                                                        <viz.data:DimensionDefinition name="PO" value="{purchaseOrders>id}"/>
-                                                    </viz.data:dimensions>
-                                                    <viz.data:measures>
-                                                        <viz.data:MeasureDefinition name="Value" value="{purchaseOrders>value}"/>
-                                                    </viz.data:measures>
-                                                </viz.data:FlattenedDataset>
-                                            </viz:dataset>
-                                            <viz:feeds>
-                                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Value"/>
-                                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="PO"/>
-                                            </viz:feeds>
-                                        </viz:VizFrame>
-                                    </chart:content>
-                                </chart:ChartContainerContent>
-
-                                <!-- Tabular View -->
-                                <chart:ChartContainerContent icon="sap-icon://table-view" title="Data Table">
-                                    <chart:content>
-                                        <Table id="dataTable" items="{path: 'purchaseOrders>/purchaseOrders/orders'}">
-                                            <columns>
-                                                <Column>
-                                                    <Text text="PO Number"/>
-                                                </Column>
-                                                <Column>
-                                                    <Text text="Description"/>
-                                                </Column>
-                                                <Column>
-                                                    <Text text="Value"/>
-                                                </Column>
-                                                <Column>
-                                                    <Text text="Status"/>
-                                                </Column>
-                                            </columns>
-                                            <items>
-                                                <ColumnListItem>
-                                                    <cells>
-                                                        <Text text="{purchaseOrders>id}"/>
-                                                        <Text text="{purchaseOrders>description}"/>
-                                                        <ObjectNumber number="{path: 'purchaseOrders>value', formatter: '.formatCurrency'}" state="Success"/>
-                                                        <ObjectStatus text="{purchaseOrders>status}" state="Success"/>
-                                                    </cells>
-                                                </ColumnListItem>
-                                            </items>
-                                        </Table>
-                                    </chart:content>
-                                </chart:ChartContainerContent>
-                            </chart:content>
-                        </chart:ChartContainer>
-                    </layout:BlockLayoutCell>
-                </layout:BlockLayoutRow>
-
-                <layout:BlockLayoutRow scrollable="false">
-                    <layout:BlockLayoutCell>
-                        <VBox class="sapUiMediumMargin">
-                            <!-- Title -->
-                            <Title text="{ppmData>/ppmData/title}" level="H2" class="sapUiMediumMarginBottom"/>
-                            <Text text="{ppmData>/ppmData/description}" class="sapUiSmallMarginBottom"/>
-
-                            <chart:ChartContainer showFullScreen="true" showPersonalization="true" autoAdjustHeight="true" title="Purchase Order Analytics">
+                <!-- Row 3: Demand Forecast & Contracts -->
+                <layout:BlockLayoutRow>
+                    <!-- Demand Forecast Section -->
+                    <layout:BlockLayoutCell class="dashboard-cell">
+                        <VBox class="dashboard-card">
+                            <chart:ChartContainer title="{demandForecast>/demandForecast/title}" wrapLabels="true" id="demandChartContainer" showFullScreen="true" width="100%" class="demand-chart-container">
                                 <chart:content>
-                                    <!-- Column Chart View -->
-                                    <chart:ChartContainerContent icon="sap-icon://horizontal-bar-chart" title="Order Values">
+                                    <chart:ChartContainerContent icon="sap-icon://line-chart" title="Demand Forecast Trend">
                                         <chart:content>
-                                            <viz:VizFrame id="ppmChart" height="250px" width="100%" vizType="area" uiConfig="{applicationSet:'fiori'}">
+                                            <viz:VizFrame id="demandVizFrame" uiConfig="{applicationSet:'fiori'}" width="100%" height="480px" vizType="line" vizProperties="{
+                                                    plotArea: {
+                                                        dataLabel: {
+                                                            visible: true
+                                                        }
+                                                    },
+                                                    title: {
+                                                        visible: true,
+                                                        text: 'Weekly Demand Forecast'
+                                                    },
+                                                    legend: {
+                                                        visible: true,
+                                                        position: 'bottom',
+                                                        alignment: 'center'
+                                                    },
+                                                    legendGroup: {
+                                                    layout: { position: 'bottom', alignment: 'center' }
+                                                    },
+                                                    valueAxis: {
+                                                        title: { 
+                                                            visible: true, 
+                                                            text: 'Quantity' 
+                                                        }
+                                                    },
+                                                    categoryAxis: {
+                                                        title: { 
+                                                            visible: true, 
+                                                            text: 'Weeks' 
+                                                        }
+                                                    }
+                                                }">
                                                 <viz:dataset>
-                                                    <viz.data:FlattenedDataset data="{ppmData>/ppmData/monthlyData}">
+                                                    <viz.data:FlattenedDataset data="{demandForecast>/demandForecast/chartData}">
                                                         <viz.data:dimensions>
-                                                            <viz.data:DimensionDefinition name="Month" value="{ppmData>month}"/>
+                                                            <viz.data:DimensionDefinition name="Week" value="{Week}" />
                                                         </viz.data:dimensions>
                                                         <viz.data:measures>
-                                                            <viz.data:MeasureDefinition name="ActualPPM" value="{ppmData>actualPPM}"/>
-                                                            <viz.data:MeasureDefinition name="TargetPPM" value="{ppmData>targetPPM}"/>
+                                                            <viz.data:MeasureDefinition name="Bearings" value="{Bearings}" />
+                                                            <viz.data:MeasureDefinition name="Hydraulic Pumps" value="{HydraulicPumps}" />
+                                                            <viz.data:MeasureDefinition name="Valves" value="{Valves}" />
                                                         </viz.data:measures>
                                                     </viz.data:FlattenedDataset>
                                                 </viz:dataset>
                                                 <viz:feeds>
-                                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="ActualPPM,TargetPPM"/>
-                                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+                                                    <viz.feeds:FeedItem id="valueAxisFeed" uid="valueAxis" type="Measure" values="Bearings,Hydraulic Pumps,Valves" />
+                                                    <viz.feeds:FeedItem id="categoryAxisFeed" uid="categoryAxis" type="Dimension" values="Week" />
+                                                </viz:feeds>
+                                                <viz:dependents>
+                                                    <viz:Popover id="demandPopOver" />
+                                                    <viz:VizTooltip id="demandToolTip" />
+                                                </viz:dependents>
+                                            </viz:VizFrame>
+                                        </chart:content>
+                                    </chart:ChartContainerContent>
+                                </chart:content>
+                                <chart:toolbar>
+                                    <OverflowToolbar>
+                                        <ToolbarSpacer />
+                                        <Label text="Product Display:" class="sapUiSmallMarginEnd filter-label" />
+                                        <MultiComboBox id="productMultiComboBox" selectionChange="onProductSelectionChanged" width="300px" placeholder="Select products to display" items="{path: 'productSelection>/products'}">
+                                            <core:Item key="{productSelection>key}" text="{productSelection>name}" />
+                                        </MultiComboBox>
+                                        <chart:ChartContainerToolbarPlaceholder
+                                        />
+                                    </OverflowToolbar>
+                                </chart:toolbar>
+                            </chart:ChartContainer>
+                        </VBox>
+                    </layout:BlockLayoutCell>
+
+                    <!-- Contracts Section -->
+                    <layout:BlockLayoutCell>
+                        <VBox height="100%">
+                            <OverflowToolbar class="sapUiTinyMarginTopBottom">
+                                <Title text="{contracts>/contracts/title}" level="H2" class="sapUiSmallMarginBottom"/>
+                                <ToolbarSpacer/>
+                                <!-- Add any toolbar buttons or filters here if needed -->
+                            </OverflowToolbar>
+
+                            <ScrollContainer height="500px" vertical="true" horizontal="false" class="scroll-container-hidden">
+                                <List id="contractsList" items="{path: 'contracts>/contracts/items'}" growing="true" growingThreshold="3" showSeparators="Inner">
+                                    <CustomListItem>
+                                        <VBox class="sapUiSmallMargin">
+                                            <!-- Contract Header -->
+                                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                                <HBox alignItems="Center">
+                                                    <Avatar displaySize="M" backgroundColor="Accent6" displayShape="Square" src="sap-icon://documents" class="sapUiSmallMarginEnd"/>
+                                                    <VBox>
+                                                        <Text text="{contracts>contractNo}" class="sapMTextBold"/>
+                                                        <Text text="{contracts>productName}" class="sapUiTinyMarginTop"/>
+                                                    </VBox>
+                                                </HBox>
+                                                <ObjectStatus text="{contracts>status}" state="{contracts>statusState}" class="sapUiSmallMarginBegin"/>
+                                            </HBox>
+
+                                            <!-- Contract Details -->
+                                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                                <VBox justifyContent="Start" alignItems="Center" class="sapUiTinyMarginEnd">
+                                                    <Label text="Validity Period" class="sapUiTinyMarginBottom"/>
+                                                    <Text text="{contracts>validityPeriod}" class="sapMText"/>
+                                                </VBox>
+                                                <VBox justifyContent="Start" alignItems="Center" class="sapUiTinyMarginEnd">
+                                                    <Label text="Total Qty" class="sapUiTinyMarginBottom"/>
+                                                    <Text text="{contracts>totalOrderedQty}" class="sapMText"/>
+                                                </VBox>
+                                                <VBox justifyContent="Start" alignItems="Center">
+                                                    <Label text="Expiry" class="sapUiTinyMarginBottom"/>
+                                                    <ObjectStatus text="{contracts>daysToExpiry}" state="{contracts>expiryState}"/>
+                                                </VBox>
+                                            </HBox>
+                                        </VBox>
+                                    </CustomListItem>
+                                </List>
+                            </ScrollContainer>
+                        </VBox>
+                    </layout:BlockLayoutCell>
+                </layout:BlockLayoutRow>
+
+                <!-- Row 4: Purchase Order Analytics -->
+                <layout:BlockLayoutRow>
+                    <layout:BlockLayoutCell class="dashboard-cell">
+                        <VBox class="dashboard-card">
+                            <chart:ChartContainer id="purchaseOrdersChartContainer" showFullScreen="true" showPersonalization="false" autoAdjustHeight="true" title="Purchase Order Analytics" class="purchase-orders-container">
+                                <chart:content>
+                                    <!-- Column Chart View -->
+                                    <chart:ChartContainerContent icon="sap-icon://horizontal-bar-chart" title="Order Values">
+                                        <chart:content>
+                                            <viz:VizFrame id="columnChart" height="400px" width="100%" vizType="column" vizProperties="{
+                                                    title: {
+                                                        visible: false
+                                                    },
+                                                    valueAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'Order Value ($)'
+                                                        }
+                                                    },
+                                                    categoryAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'Purchase Orders'
+                                                        }
+                                                    }
+                                                }">
+                                                <viz:dataset>
+                                                    <viz.data:FlattenedDataset data="{purchaseOrders>/purchaseOrders/orders}">
+                                                        <viz.data:dimensions>
+                                                            <viz.data:DimensionDefinition name="PO" value="{purchaseOrders>id}" />
+                                                        </viz.data:dimensions>
+                                                        <viz.data:measures>
+                                                            <viz.data:MeasureDefinition name="Value" value="{purchaseOrders>value}" />
+                                                        </viz.data:measures>
+                                                    </viz.data:FlattenedDataset>
+                                                </viz:dataset>
+                                                <viz:feeds>
+                                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Value" />
+                                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="PO" />
+                                                </viz:feeds>
+                                            </viz:VizFrame>
+                                        </chart:content>
+                                    </chart:ChartContainerContent>
+
+                                    <!-- Tabular View -->
+                                    <chart:ChartContainerContent icon="sap-icon://table-view" title="Data Table">
+                                        <chart:content>
+                                            <Table id="dataTable" items="{path: 'purchaseOrders>/purchaseOrders/orders'}" class="purchase-orders-table">
+                                                <columns>
+                                                    <Column width="20%">
+                                                        <Text text="PO Number" />
+                                                    </Column>
+                                                    <Column width="40%">
+                                                        <Text text="Description" />
+                                                    </Column>
+                                                    <Column width="20%">
+                                                        <Text text="Value" />
+                                                    </Column>
+                                                    <Column width="20%">
+                                                        <Text text="Status" />
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>
+                                                            <Text text="{purchaseOrders>id}" />
+                                                            <Text text="{purchaseOrders>description}" />
+                                                            <ObjectNumber number="{path: 'purchaseOrders>value', formatter: '.formatCurrency'}" state="Success" />
+                                                            <ObjectStatus text="{purchaseOrders>status}" state="{= ${purchaseOrders>status} === 'Completed' ? 'Success' : 
+                                                                        ${purchaseOrders>status} === 'In Progress' ? 'Warning' : 'Error'}" />
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </chart:content>
+                                    </chart:ChartContainerContent>
+                                </chart:content>
+                            </chart:ChartContainer>
+                        </VBox>
+                    </layout:BlockLayoutCell>
+                </layout:BlockLayoutRow>
+
+                <!-- Row 5: PPM Data -->
+                <layout:BlockLayoutRow>
+                    <layout:BlockLayoutCell class="dashboard-cell">
+                        <VBox class="dashboard-card">
+                            <Title text="{ppmData>/ppmData/title}" level="H2" class="card-header" />
+                            <Text text="{ppmData>/ppmData/description}" class="ppm-description sapUiSmallMarginBottom" />
+
+                            <chart:ChartContainer showFullScreen="true" showPersonalization="false" autoAdjustHeight="true">
+                                <chart:content>
+                                    <chart:ChartContainerContent icon="sap-icon://area-chart" title="PPM Trend">
+                                        <chart:content>
+                                            <viz:VizFrame id="ppmChart" height="250px" width="100%" vizType="line" uiConfig="{applicationSet:'fiori'}" vizProperties="{
+                                                    title: {
+                                                        visible: false
+                                                    },
+                                                    valueAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'PPM Value'
+                                                        }
+                                                    },
+                                                    categoryAxis: {
+                                                        title: {
+                                                            visible: true,
+                                                            text: 'Month'
+                                                        }
+                                                    }
+                                                }">
+                                                <viz:dataset>
+                                                    <viz.data:FlattenedDataset data="{ppmData>/ppmData/monthlyData}">
+                                                        <viz.data:dimensions>
+                                                            <viz.data:DimensionDefinition name="Month" value="{ppmData>month}" />
+                                                        </viz.data:dimensions>
+                                                        <viz.data:measures>
+                                                            <viz.data:MeasureDefinition name="ActualPPM" value="{ppmData>actualPPM}" />
+                                                            <viz.data:MeasureDefinition name="TargetPPM" value="{ppmData>targetPPM}" />
+                                                        </viz.data:measures>
+                                                    </viz.data:FlattenedDataset>
+                                                </viz:dataset>
+                                                <viz:feeds>
+                                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="ActualPPM,TargetPPM" />
+                                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month" />
                                                 </viz:feeds>
                                             </viz:VizFrame>
                                         </chart:content>

@@ -1,0 +1,39 @@
+{
+  "categories": [
+    {
+      "key": "All",
+      "text": "All Categories",
+      "count": 6
+    },
+    {
+      "key": "RFQ",
+      "text": "RFQ",
+      "count": 1
+    },
+    {
+      "key": "Business Announcement",
+      "text": "Business Announcement",
+      "count": 1
+    },
+    {
+      "key": "Compliance Notification",
+      "text": "Compliance Notification",
+      "count": 1
+    },
+    {
+      "key": "Alert",
+      "text": "Alert",
+      "count": 1
+    },
+    {
+      "key": "Maintenance",
+      "text": "Maintenance",
+      "count": 1
+    },
+    {
+      "key": "Urgent",
+      "text": "Urgent",
+      "count": 1
+    }
+  ]
+}

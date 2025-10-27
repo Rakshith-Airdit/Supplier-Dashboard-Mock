@@ -4,46 +4,62 @@ body {
   overflow-y: hidden;
 }
 
-.fioriCard {
+.financial-card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
     background: #ffffff;
     transition: box-shadow 0.2s ease;
 }
 
-.fioriCard:hover {
+/* .financial-card:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
+} */
 
 /* Card background colors */
-.financialCard1 {
+.financial-card-total {
     background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
     border: 1px solid #90caf9 !important;
     border-radius: 0.5rem !important;
 }
 
-.financialCard2 {
+.financial-card-growth {
     background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%) !important;
     border: 1px solid #a5d6a7 !important;
     border-radius: 0.5rem !important;
 }
 
-.financialCard3 {
+.financial-card-current {
     background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%) !important;
     border: 1px solid #ffcc80 !important;
     border-radius: 0.5rem !important;
 }
 
-/* Card header styling */
-.financialCard .sapFCardHeader {
-    background: transparent !important;
-    border-bottom: 1px solid rgba(0,0,0,0.1) !important;
-}
-
 /* Hover effects for cards */
-.financialCard:hover {
+.financial-card::hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
     transition: all 0.3s ease;
 }
+
+/* Hidden scrollbar but keep functionality */
+/* .scroll-container-hidden ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.scroll-container-hidden {
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+
+.scroll-container-hidden::-webkit-scrollbar {
+    display: none; 
+}
+
+.scroll-container-hidden .sapMScrollCont {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scroll-container-hidden .sapMScrollCont::-webkit-scrollbar {
+    display: none;
+} */

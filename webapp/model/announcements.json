@@ -3,25 +3,39 @@
     "title": "Business Announcements & News",
     "items": [
       {
-        "type": "RFC",
-        "title": "Hydraulic Components - Q1 2025",
-        "category": "RFC Invitation",
+        "type": "RFQ",
+        "title": "RFQ Invitation: Hydraulic Components - Q1 2025",
+        "category": "RFQ",
         "timestamp": "2025-01-15T10:00:00Z",
         "timeAgo": "2 hours ago"
       },
       {
         "type": "Business Announcement",
         "title": "Industrial Pumps Supply",
-        "category": "New Tender Published",
+        "category": "Business Announcement",
         "timestamp": "2025-01-15T07:00:00Z",
         "timeAgo": "5 hours ago"
       },
       {
         "type": "Compliance Notification",
         "title": "ISO Certification Renewal Due in 30 Days",
-        "category": "Compliance",
+        "category": "Compliance Notification",
         "timestamp": "2025-01-14T00:00:00Z",
         "timeAgo": "1 day ago"
+      },
+      {
+        "type": "Alert",
+        "title": "System Maintenance Scheduled: Oct 20, 2025",
+        "category": "Alert",
+        "timestamp": "2025-01-13T00:00:00Z",
+        "timeAgo": "2 days ago"
+      },
+      {
+        "type": "Alert",
+        "title": "System Maintenance Scheduled: Oct 20, 2025",
+        "category": "Maintenance",
+        "timestamp": "2025-01-13T00:00:00Z",
+        "timeAgo": "2 days ago"
       },
       {
         "type": "Alert",

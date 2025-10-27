@@ -2,40 +2,62 @@ sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/viz/ui5/format/ChartFormatter",
-    "sap/viz/ui5/api/env/Format",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
   ],
-  function (
-    Controller,
-    JSONModel,
-    ChartFormatter,
-    Format,
-    MessageToast,
-    MessageBox
-  ) {
+  function (Controller, JSONModel, MessageToast, MessageBox) {
     "use strict";
 
     return Controller.extend(
       "com.dashboard.supplierbusinessdashboard.controller.Dashboard",
       {
         onInit: function () {
-          this._loadModels();
-          this._initializeVizFrame();
+          this._loadAllModels();
+          this._initializeChartControls();
+          this._setupEventHandlers();
         },
 
-        _loadModels: function () {
-          const oDemandForecastModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/demandForecast.json"
-            )
-          );
-          const oContractsModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/contracts.json"
-            )
-          );
+        /**
+         * Load all JSON models for the dashboard
+         */
+        _loadAllModels: function () {
+          const aModelConfigs = [
+            { name: "demandForecast", path: "demandForecast.json" },
+            { name: "contracts", path: "contracts.json" },
+            { name: "announcements", path: "announcements.json" },
+            { name: "products", path: "products.json" },
+            { name: "businessData", path: "businessData.json" },
+            { name: "compliance", path: "compliance.json" },
+            { name: "purchaseOrders", path: "purchaseOrders.json" },
+            { name: "ppmData", path: "ppmData.json" },
+            { name: "categories", path: "categories.json" },
+          ];
+
+          // Load all data models
+          aModelConfigs.forEach((config) => {
+            try {
+              const oModel = new JSONModel(
+                sap.ui.require.toUrl(
+                  `com/dashboard/supplierbusinessdashboard/model/${config.path}`
+                )
+              );
+              this.getView().setModel(oModel, config.name);
+            } catch (error) {
+              console.error(`Failed to load model: ${config.name}`, error);
+              this._showError(`Failed to load ${config.name} data`);
+            }
+          });
+
+          // Initialize product selection model
+          this._initializeProductSelectionModel();
+          // Initialize filter model
+          this._initializeFilterModel();
+        },
+
+        /**
+         * Initialize product selection model with default values
+         */
+        _initializeProductSelectionModel: function () {
           const oProductSelectionModel = new JSONModel({
             products: [
               { key: "Bearings", name: "Bearings", selected: true },
@@ -47,251 +69,299 @@ sap.ui.define(
               { key: "Valves", name: "Valves", selected: true },
             ],
           });
-          const oAnnouncementsModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/announcements.json"
-            )
-          );
-          const oProductsModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/products.json"
-            )
-          );
-          const oBusinessDataModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/businessData.json"
-            )
-          );
-          const oComplianceModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/compliance.json"
-            )
-          );
-          const oPurchaseOrdersModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/purchaseOrders.json"
-            )
-          );
-          const oPPMDataModel = new JSONModel(
-            sap.ui.require.toUrl(
-              "com/dashboard/supplierbusinessdashboard/model/ppmData.json"
-            )
-          );
-
-          this.getView().setModel(oDemandForecastModel, "demandForecast");
-          this.getView().setModel(oContractsModel, "contracts");
           this.getView().setModel(oProductSelectionModel, "productSelection");
-          this.getView().setModel(oAnnouncementsModel, "announcements");
-          this.getView().setModel(oProductsModel, "products");
-          this.getView().setModel(oBusinessDataModel, "businessData");
-          this.getView().setModel(oComplianceModel, "compliance");
-          this.getView().setModel(oPurchaseOrdersModel, "purchaseOrders");
-          this.getView().setModel(oPPMDataModel, "ppmData");
         },
 
-        _initializeVizFrame: function () {
-          Format.numericFormatter(ChartFormatter.getInstance());
+        /**
+         * Initialize filter model with selected state
+         */
+        _initializeFilterModel: function () {
+          const oFilterModel = new JSONModel({
+            selectedCategory: "All",
+          });
+          this.getView().setModel(oFilterModel, "filter");
+        },
 
+        /**
+         * Initialize chart controls and connections
+         */
+        _initializeChartControls: function () {
+          // Initialize MultiComboBox with all products selected
+          const oMultiComboBox = this.byId("productMultiComboBox");
+          if (oMultiComboBox) {
+            oMultiComboBox.setSelectedKeys([
+              "Bearings",
+              "Hydraulic Pumps",
+              "Valves",
+            ]);
+          }
+
+          // Connect tooltip and popover for demand chart
+          this._connectChartTools();
+        },
+
+        /**
+         * Connect chart tooltips and popovers
+         */
+        _connectChartTools: function () {
           const oVizFrame = this.byId("demandVizFrame");
           const oPopover = this.byId("demandPopOver");
           const oToolTip = this.byId("demandToolTip");
 
-          // Initialize MultiComboBox with all products selected
-          const oMultiComboBox = this.byId("productMultiComboBox");
-
-          if (oMultiComboBox) {
-            const aSelectedKeys = ["Bearings", "Hydraulic Pumps", "Valves"];
-            oMultiComboBox.setSelectedKeys(aSelectedKeys);
-          }
-
-          // Ensure Popover is connected to the VizFrame for tooltips
-          if (oPopover) {
+          if (oPopover && oVizFrame) {
             oPopover.connect(oVizFrame.getVizUid());
           }
-
-          // Ensure Popover is connected to the VizFrame for tooltips
-          if (oToolTip) {
+          if (oToolTip && oVizFrame) {
             oToolTip.connect(oVizFrame.getVizUid());
           }
-
-          this._setDefaultVizProperties();
         },
 
-        _setDefaultVizProperties: function () {
-          const oVizFrame = this.byId("demandVizFrame");
-
-          const oVizProperties = {
-            plotArea: {
-              dataLabel: {
-                visible: true,
-              },
-            },
-            title: {
-              visible: true,
-              text: "Weekly Demand Forecast",
-            },
-            legend: {
-              visible: true,
-              position: "bottom",
-              alignment: "center",
-            },
-            legendGroup: {
-              layout: { position: "bottom", alignment: "center" },
-            },
-            interaction: {
-              selectability: { mode: "complete" },
-              zoom: { enablement: "enabled" },
-              gestures: { enable: true },
-              tooltip: {
-                enabled: true,
-                type: "datum",
-              },
-            },
-            valueAxis: {
-              title: { visible: true, text: "Quantity" },
-            },
-            categoryAxis: {
-              title: { visible: true, text: "Weeks" },
-            },
-          };
-
-          oVizFrame.setVizProperties(oVizProperties);
+        /**
+         * Setup additional event handlers
+         */
+        _setupEventHandlers: function () {
+          // Add any additional event handlers here
         },
 
+        /**
+         * Handle product selection changes for filtering
+         */
         onProductSelectionChanged: function (oEvent) {
           const aSelectedKeys = oEvent.getSource().getSelectedKeys();
-          const oVizFrame = this.byId("demandVizFrame");
-          var oItems = oEvent.getSource().getItems();
           const oMultiComboBox = oEvent.getSource();
-          let aItems = [];
-          oItems.map((item) => aItems.push(item.getText()));
 
-          let sChangedItemKey = oEvent.getParameter("changedItem").getKey();
-
+          // Validation - at least one product must be selected
           if (aSelectedKeys.length < 1) {
-            MessageBox.warning("Atleast One Product Should be Selected.");
-            oMultiComboBox.setSelectedKeys(sChangedItemKey);
+            MessageBox.warning("At least one product must be selected.");
+            const sChangedItemKey = oEvent.getParameter("changedItem").getKey();
+            oMultiComboBox.setSelectedKeys([sChangedItemKey]);
             return;
           }
 
           console.log("Selected products:", aSelectedKeys);
 
-          var feedValueAxis = this.getView().byId("valueAxisFeed");
-          oVizFrame.removeFeed(feedValueAxis);
-          feedValueAxis.setValues(aSelectedKeys);
-          oVizFrame.addFeed(feedValueAxis);
+          // Update chart feeds based on selection
+          this._updateChartFeeds(aSelectedKeys);
+
+          // Show success message for user feedback
+          MessageToast.show(`Filtered ${aSelectedKeys.length} products`);
         },
 
-        _updateChartDataset: function (aSelectedProducts) {
+        /**
+         * Update chart feeds based on selected products
+         */
+        _updateChartFeeds: function (aSelectedProducts) {
           const oVizFrame = this.byId("demandVizFrame");
-          const oDataset = oVizFrame.getDataset();
+          const feedValueAxis = this.byId("valueAxisFeed");
 
-          // Modify the dataset based on selected products
-          const oModel = this.getView().getModel("demandForecast");
-          const aChartData = oModel.getProperty("/demandForecast/chartData");
-
-          // Filter the dataset based on selected products
-          const filteredData = aChartData.map((entry) => {
-            const filteredEntry = { Week: entry.Week };
-            aSelectedProducts.forEach((product) => {
-              if (entry[product]) {
-                filteredEntry[product] = entry[product];
-              }
-            });
-            return filteredEntry;
-          });
-
-          // Update the dataset in the VizFrame
-          const oFlattenedDataset = this.byId("demandVizFrame").getDataset();
-          oFlattenedDataset.setData(filteredData);
-
-          // Update the measures dynamically based on selected products
-          const aMeasures = aSelectedProducts.map((product) => {
-            return new sap.viz.ui5.data.MeasureDefinition({
-              name: product,
-              value: `{${product}}`,
-            });
-          });
-
-          // Set the measures dynamically to the VizFrame
-          oFlattenedDataset.setMeasures(aMeasures);
-
-          // Redraw the VizFrame
-          // oVizFrame.refresh();
+          if (oVizFrame && feedValueAxis) {
+            try {
+              oVizFrame.removeFeed(feedValueAxis);
+              feedValueAxis.setValues(aSelectedProducts);
+              oVizFrame.addFeed(feedValueAxis);
+            } catch (error) {
+              console.error("Error updating chart feeds:", error);
+              this._showError("Failed to update chart display");
+            }
+          }
         },
 
-        _getValueFeed: function (oVizFrame) {
-          const aFeeds = oVizFrame.getFeeds();
-          return aFeeds.find((oFeed) => oFeed.getUid() === "valueAxis");
+        /**
+         * Handle after rendering for any post-render adjustments
+         */
+        onAfterRendering: function () {
+          this._adjustResponsiveLayout();
         },
 
-        onDatasetSelected: function (oEvent) {
-          const sSelectedKey = oEvent
-            .getSource()
-            .getSelectedButton()
-            .getBindingContext("demandForecast")
-            .getObject().key;
-          this._updateChartDataset(sSelectedKey);
+        /**
+         * Adjust layout for responsiveness
+         */
+        _adjustResponsiveLayout: function () {
+          // Add responsive behavior if needed
+          const oWindow = window;
+          if (oWindow.addEventListener) {
+            oWindow.addEventListener("resize", this._onWindowResize.bind(this));
+          }
         },
 
-        onSeriesSelected: function (oEvent) {
-          const sSelectedKey = oEvent
-            .getSource()
-            .getSelectedButton()
-            .getBindingContext("demandForecast")
-            .getObject().key;
-          this._updateChartType(sSelectedKey);
+        /**
+         * Handle window resize for responsive adjustments
+         */
+        _onWindowResize: function () {
+          // Add responsive layout adjustments here
+          console.log("Window resized - adjust layout if needed");
         },
 
-        _updateChartType: function (sChartType) {
-          const oVizFrame = this.byId("demandVizFrame");
-          let sVizType = "line";
-          if (sChartType === "column") sVizType = "column";
-          else if (sChartType === "stacked") sVizType = "stacked_column";
-
-          oVizFrame.setVizType(sVizType);
-
-          // Update legend position for better centering
-          const oProps = oVizFrame.getVizProperties() || {};
-          oVizFrame.setVizProperties({
-            ...oProps,
-            legend: {
-              ...oProps.legend,
-              position: "bottom",
-              alignment: "center",
-              layout: {
-                position: "bottom",
-                alignment: "center",
-              },
-            },
-          });
+        /**
+         * Show error message to user
+         */
+        _showError: function (sMessage) {
+          MessageBox.error(sMessage);
         },
 
+        // ============ FORMATTER FUNCTIONS ============
+
+        /**
+         * Format quantity with units
+         */
         formatQuantity: function (quantity, formattedNumber) {
-          return formattedNumber + " units";
+          if (!quantity && quantity !== 0) return "0 units";
+          return `${formattedNumber} units`;
         },
 
+        /**
+         * Format number with locale-specific formatting
+         */
         formatNumber: function (value) {
-          if (!value) return "0";
+          if (!value && value !== 0) return "0";
           return value.toLocaleString();
         },
 
+        /**
+         * Format currency value
+         */
         formatCurrency: function (value, currency) {
-          if (!value) return "$0";
-          return "$" + value.toLocaleString();
+          if (!value && value !== 0) return "$0";
+          const formattedValue = value.toLocaleString();
+          return currency === "EUR"
+            ? `€${formattedValue}`
+            : `$${formattedValue}`;
         },
 
+        /**
+         * Format trend percentage
+         */
         formatTrend: function (value) {
-          if (value > 0) {
-            return "+" + value + "%";
-          }
-          return value + "%";
+          if (!value && value !== 0) return "0%";
+          return value > 0 ? `+${value}%` : `${value}%`;
         },
 
+        /**
+         * Determine trend state for styling
+         */
         getTrendState: function (value) {
+          if (!value && value !== 0) return "None";
           if (value > 0) return "Success";
           if (value < 0) return "Error";
           return "None";
+        },
+
+        /**
+         * Format date for display
+         */
+        formatDate: function (dateString) {
+          if (!dateString) return "";
+          try {
+            const oDate = new Date(dateString);
+            return oDate.toLocaleDateString();
+          } catch (error) {
+            return dateString;
+          }
+        },
+
+        /**
+         * Calculate days until expiry
+         */
+        getDaysUntilExpiry: function (expiryDate) {
+          if (!expiryDate) return 0;
+          try {
+            const oExpiryDate = new Date(expiryDate);
+            const oToday = new Date();
+            const iTimeDiff = oExpiryDate.getTime() - oToday.getTime();
+            return Math.ceil(iTimeDiff / (1000 * 3600 * 24));
+          } catch (error) {
+            return 0;
+          }
+        },
+
+        // More comprehensive formatter
+        getAnnouncementIcon: function (category) {
+          const iconMap = {
+            RFQ: "sap-icon://message-information",
+            "Business Announcement": "sap-icon://bell",
+            "Compliance Notification": "sap-icon://alert",
+            Alert: "sap-icon://warning",
+            Maintenance: "sap-icon://wrench",
+            Urgent: "sap-icon://error",
+          };
+          return iconMap[category] || "sap-icon://hint";
+        },
+
+        // Optional: Formatter for background colors
+        getAnnouncementColor: function (category) {
+          const colorMap = {
+            RFQ: "Accent6",
+            "Business Announcement": "Accent8",
+            "Compliance Notification": "Accent2",
+            Urgent: "Accent4",
+          };
+          return colorMap[category] || "Accent6";
+        },
+
+        // Formatter for status state
+        getStatusState: function (category) {
+          const stateMap = {
+            RFQ: "Information",
+            "Business Announcement": "Success",
+            "Compliance Notification": "Warning",
+            Alert: "Error",
+            Maintenance: "Indication06",
+            Urgent: "Error",
+          };
+          return stateMap[category] || "None";
+        },
+
+        // Filter change handler
+        onCategoryFilterChanged: function (oEvent) {
+          const sSelectedKey = oEvent.getSource().getSelectedKey();
+          const oFilterModel = this.getView().getModel("filter");
+          oFilterModel.setProperty("/selectedCategory", sSelectedKey);
+
+          this._filterAnnouncements(sSelectedKey);
+
+          if (oSelectedCategory) {
+            sap.m.MessageToast.show(`Showing: ${oSelectedCategory.text}`);
+          }
+        },
+
+        // Filter announcements based on selected category
+        _filterAnnouncements: function (sCategory) {
+          const oAnnouncementsModel = this.getView().getModel("announcements");
+          const aAllItems = oAnnouncementsModel.getProperty(
+            "/announcements/items"
+          );
+
+          if (!aAllItems) return;
+
+          let aFilteredItems;
+          if (sCategory === "All") {
+            aFilteredItems = aAllItems;
+          } else {
+            aFilteredItems = aAllItems.filter(function (item) {
+              return item.category === sCategory;
+            });
+          }
+
+          // Update the filtered items in the model
+          oAnnouncementsModel.setProperty(
+            "/announcements/items",
+            aFilteredItems
+          );
+        },
+
+        // ============ CLEANUP ============
+
+        /**
+         * Clean up event listeners on exit
+         */
+        onExit: function () {
+          const oWindow = window;
+          if (oWindow.removeEventListener) {
+            oWindow.removeEventListener(
+              "resize",
+              this._onWindowResize.bind(this)
+            );
+          }
         },
       }
     );
