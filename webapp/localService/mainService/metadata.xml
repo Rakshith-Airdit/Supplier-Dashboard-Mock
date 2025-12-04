@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZC_AISP_BUSI_DASH_BNDSampleService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="BusinessValueTrend" EntityType="ZC_AISP_BUSI_DASH_BNDSampleService.BusinessValueTrend" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:label="Buss.Dash.- My Business(PO Value- Y2D,M)"/>
+                <EntitySet Name="TopOpenPurchaseOrders" EntityType="ZC_AISP_BUSI_DASH_BNDSampleService.TopOpenPurchaseOrders" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:label="Buss. Dash.- Top5 Open PO (PO Value)"/>
+                <EntitySet Name="TopProducts" EntityType="ZC_AISP_BUSI_DASH_BNDSampleService.TopProducts" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:label="Buss. Dashboard - Top5 Products (PO Qty)"/>
+                <EntitySet Name="BusinessCommitments" EntityType="ZC_AISP_BUSI_DASH_BNDSampleService.BusinessCommitments" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:label="Buss.Dash- Top5 Contracts based on Value"/>
+            </EntityContainer>
+            <EntityType Name="BusinessValueTrend" sap:content-version="1" sap:label="Buss.Dash.- My Business(PO Value- Y2D,M)">
+                <Key>
+                    <PropertyRef Name="VendorCode"/>
+                </Key>
+                <Property Name="VendorCode" Type="Edm.String" MaxLength="10" Nullable="false" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+                <Property Name="PoValue_Y2D" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Jan" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Feb" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Mar" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Apr" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_May" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Jun" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Jul" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Aug" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Sep" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Oct" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Nov" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="PoValue_Dec" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="TotalAmountCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+            </EntityType>
+            <EntityType Name="TopOpenPurchaseOrders" sap:content-version="1" sap:label="Buss. Dash.- Top5 Open PO (PO Value)">
+                <Key>
+                    <PropertyRef Name="VendorCode"/>
+                </Key>
+                <Property Name="VendorCode" Type="Edm.String" MaxLength="10" Nullable="false" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+                <Property Name="PoNo" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Purchasing Document" sap:quickinfo="Purchasing Document Number"/>
+                <Property Name="TotalAmount" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="TotalAmountCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+                <Property Name="TotalOrderedQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="TotalOrderedQuantityUnit" sap:label="Order Quantity" sap:quickinfo="Purchase Order Quantity"/>
+                <Property Name="TotalOrderedQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <EntityType Name="TopProducts" sap:content-version="1" sap:label="Buss. Dashboard - Top5 Products (PO Qty)">
+                <Key>
+                    <PropertyRef Name="VendorCode"/>
+                </Key>
+                <Property Name="VendorCode" Type="Edm.String" MaxLength="10" Nullable="false" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+                <Property Name="MaterialNo" Type="Edm.String" MaxLength="18" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="MaterialName" Type="Edm.String" MaxLength="40" sap:label="Short Text"/>
+                <Property Name="TotalOrderedQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="TotalOrderedQuantityUnit" sap:label="Order Quantity" sap:quickinfo="Purchase Order Quantity"/>
+                <Property Name="TotalOrderedQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="TotalAmount" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalAmountCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="TotalAmountCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+            </EntityType>
+            <EntityType Name="BusinessCommitments" sap:content-version="1" sap:label="Buss.Dash- Top5 Contracts based on Value">
+                <Key>
+                    <PropertyRef Name="VendorCode"/>
+                </Key>
+                <Property Name="VendorCode" Type="Edm.String" MaxLength="10" Nullable="false" sap:display-format="UpperCase" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+                <Property Name="PurchaseContract" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Purchasing Document" sap:quickinfo="Purchasing Document Number"/>
+                <Property Name="ValidityStartDate" Type="Edm.DateTime" sap:display-format="Date" sap:label="Validity Per. Start" sap:quickinfo="Start of Validity Period"/>
+                <Property Name="ValidityEndDate" Type="Edm.DateTime" sap:display-format="Date" sap:label="Validity Period End" sap:quickinfo="End of Validity Period"/>
+                <Property Name="DaysPendingToExpire" Type="Edm.Byte"/>
+                <Property Name="TotalValue" Type="Edm.Decimal" Precision="11" Scale="3" sap:unit="TotalValueCurrency" sap:variable-scale="true" sap:label="Net Price"/>
+                <Property Name="TotalValueCurrency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency Key" sap:semantics="currency-code"/>
+                <Property Name="TotalOrderedQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="TotalOrderedQuantityUnit" sap:label="Order Quantity" sap:quickinfo="Purchase Order Quantity"/>
+                <Property Name="TotalOrderedQuantityUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+            </EntityType>
+            <Annotations Target="ZC_AISP_BUSI_DASH_BNDSampleService.EntityContainer/BusinessValueTrend" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZC_AISP_BUSI_DASH_BNDSampleService.EntityContainer/TopOpenPurchaseOrders" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZC_AISP_BUSI_DASH_BNDSampleService.EntityContainer/TopProducts" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="ZC_AISP_BUSI_DASH_BNDSampleService.EntityContainer/BusinessCommitments" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record Type="Capabilities.DeleteRestrictionsType">
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record Type="Capabilities.UpdateRestrictionsType">
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

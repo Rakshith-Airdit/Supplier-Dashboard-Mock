@@ -15,6 +15,11 @@ server:
             - /resources
             - /test-resources
           url: https://ui5.sap.com
+        backend:
+          - url: https://airdit-software-services-private-limite-airdit-190920236a7746bd.cfapps.ap10.hana.ondemand.com
+            authenticationType: NoAuthentication
+            destination: AISP_PO_ASN
+            path: /odata
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
